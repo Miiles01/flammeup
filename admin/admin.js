@@ -244,7 +244,6 @@
     try {
       const data = await api('login', { password: $('#password').value });
       state.csrf = data.csrf;
-      $('#password').value = '';
       showApp();
     } catch (ex) {
       err.textContent = ex.message; err.hidden = false;
