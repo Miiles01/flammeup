@@ -269,7 +269,7 @@ function require_admin(): void
 }
 
 /** Enregistre une commande (utilisé par le site et par la commande de démonstration). */
-function insert_order(string $name, string $phone, string $note, string $pickupAt, bool $asap, array $items, int $subtotal): array
+function insert_order(string $name, string $phone, string $note, string $pickupAt, bool $asap, array $items, int $subtotal, ?string $ip = null): array
 {
     $tax = (int)round($subtotal * config('tax_rate'));
     $now = date('Y-m-d H:i:s');
@@ -283,7 +283,7 @@ function insert_order(string $name, string $phone, string $note, string $pickupA
     $events = json_encode([['status' => 'new', 'at' => $now]]);
     $pdo->prepare('INSERT INTO orders (number, token, customer_name, phone, note, pickup_at, asap, items_json, subtotal_cents, tax_cents, total_cents, status, ip, created_at, updated_at, events_json)
                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
-        ->execute([$number, $token, $name, $phone, $note, $pickupAt, $asap ? 1 : 0, json_encode($items, JSON_UNESCAPED_UNICODE), $subtotal, $tax, $subtotal + $tax, 'new', client_ip(), $now, $now, $events]);
+        ->execute([$number, $token, $name, $phone, $note, $pickupAt, $asap ? 1 : 0, json_encode($items, JSON_UNESCAPED_UNICODE), $subtotal, $tax, $subtotal + $tax, 'new', $ip ?? client_ip(), $now, $now, $events]);
     $pdo->commit();
     return ['token' => $token, 'number' => $number, 'total_cents' => $subtotal + $tax];
 }

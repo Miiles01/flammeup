@@ -82,7 +82,7 @@ switch ($action) {
         }
         $asap = random_int(0, 1) === 1;
         $pickupAt = date('Y-m-d H:i:s', time() + ($asap ? config('prep_minutes') : random_int(3, 8) * 15) * 60);
-        $order = insert_order($names[array_rand($names)], sprintf('(819) 555-%04d', random_int(100, 9999)), $notes[array_rand($notes)], $pickupAt, $asap, $items, $subtotal);
+        $order = insert_order($names[array_rand($names)], sprintf('(819) 555-%04d', random_int(100, 9999)), $notes[array_rand($notes)], $pickupAt, $asap, $items, $subtotal, 'demo'); // hors limite anti-abus
         json_out(['ok' => true, 'number' => $order['number']]);
 
     case 'menu':
