@@ -59,6 +59,8 @@ function upgrade(PDO $pdo): void
 {
     $cols = array_column($pdo->query('PRAGMA table_info(products)')->fetchAll(), 'name');
     if (!in_array('image', $cols, true)) $pdo->exec("ALTER TABLE products ADD COLUMN image TEXT NOT NULL DEFAULT ''");
+    $ocols = array_column($pdo->query('PRAGMA table_info(orders)')->fetchAll(), 'name');
+    if (!in_array('events_json', $ocols, true)) $pdo->exec("ALTER TABLE orders ADD COLUMN events_json TEXT NOT NULL DEFAULT '[]'");
 
     // Photos passées du CDN Unsplash aux fichiers locaux (garde prix et disponibilités).
     $pdo->exec("UPDATE products SET image = 'assets/img/menu/' || id || '.jpg' WHERE image LIKE 'unsplash:%'");
@@ -153,7 +155,8 @@ function migrate(PDO $pdo): void
             status TEXT NOT NULL DEFAULT 'new',
             ip TEXT NOT NULL DEFAULT '',
             created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
+            updated_at TEXT NOT NULL,
+            events_json TEXT NOT NULL DEFAULT '[]'
         );
         CREATE INDEX IF NOT EXISTS orders_created ON orders(created_at);
         CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -263,6 +266,26 @@ function require_admin(): void
         $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
         if (!hash_equals($_SESSION['csrf'] ?? '', $token)) fail('Jeton invalide.', 403);
     }
+}
+
+/** Enregistre une commande (utilisé par le site et par la commande de démonstration). */
+function insert_order(string $name, string $phone, string $note, string $pickupAt, bool $asap, array $items, int $subtotal): array
+{
+    $tax = (int)round($subtotal * config('tax_rate'));
+    $now = date('Y-m-d H:i:s');
+    $pdo = db();
+    $pdo->beginTransaction();
+    // Numéro court du jour : 001, 002…
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE created_at >= ?");
+    $stmt->execute([date('Y-m-d 00:00:00')]);
+    $number = str_pad((string)((int)$stmt->fetchColumn() + 1), 3, '0', STR_PAD_LEFT);
+    $token = bin2hex(random_bytes(16));
+    $events = json_encode([['status' => 'new', 'at' => $now]]);
+    $pdo->prepare('INSERT INTO orders (number, token, customer_name, phone, note, pickup_at, asap, items_json, subtotal_cents, tax_cents, total_cents, status, ip, created_at, updated_at, events_json)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+        ->execute([$number, $token, $name, $phone, $note, $pickupAt, $asap ? 1 : 0, json_encode($items, JSON_UNESCAPED_UNICODE), $subtotal, $tax, $subtotal + $tax, 'new', client_ip(), $now, $now, $events]);
+    $pdo->commit();
+    return ['token' => $token, 'number' => $number, 'total_cents' => $subtotal + $tax];
 }
 
 function order_public(array $o): array

@@ -4,94 +4,125 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Flamme Up — Commandes</title>
+  <title>Espace équipe | Flamme Up</title>
   <meta name="theme-color" content="#120F0D">
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=2">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css?v=8">
 </head>
 <body>
 
-  <!-- Connexion -->
+  <!-- ================================================================ Connexion -->
   <main class="login" id="login" hidden>
-    <form class="login__card" id="login-form">
-      <img class="login__logo" src="../assets/img/logo-color.png" alt="Flamme Up — Poulet & Co" width="1028" height="466">
-      <h1 class="display login__title">Espace équipe</h1>
-      <p class="login__sub">Suivez les commandes à emporter en temps réel.</p>
-      <div class="field">
-        <label for="password">Mot de passe</label>
-        <div class="pw">
-          <input class="input" id="password" type="password" autocomplete="current-password" required value="flamme2026">
-          <button type="button" class="pw__toggle" id="pw-toggle" aria-label="Afficher le mot de passe"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
-        </div>
-        <p class="field__error" id="login-error" role="alert" hidden></p>
+    <div class="login__visual" aria-hidden="true">
+      <img src="../assets/img/banner-2000.jpg" alt="">
+      <div class="login__caption">
+        <p class="login__kicker">Comptoir à emporter</p>
+        <h2 class="display">Le coup de feu, sous contrôle.</h2>
+        <p>Commandes en direct, cuisine, menu et ventes du jour : tout le service se pilote d’ici.</p>
       </div>
-      <button class="btn btn--primary btn--block" type="submit" id="login-btn">Se connecter</button>
-      <a class="login__back" href="../">Retour au site</a>
-    </form>
+    </div>
+    <div class="login__panel">
+      <div class="login__card">
+        <img class="login__logo" src="../assets/img/logo-color.png" alt="Flamme Up — Poulet & Co" width="1028" height="466">
+        <div>
+          <h1 class="display">Espace équipe</h1>
+          <p class="muted">Connectez-vous pour gérer les commandes.</p>
+        </div>
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="password">Mot de passe</label>
+            <div class="pw-wrap">
+              <input class="input" id="password" type="password" autocomplete="current-password" required value="flamme2026">
+              <button type="button" class="icon-btn" id="pw-toggle" aria-label="Afficher le mot de passe"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+            </div>
+            <p class="field__error" id="login-error" role="alert" hidden></p>
+          </div>
+          <button class="btn btn--red btn--lg btn--block" type="submit" id="login-btn">Se connecter</button>
+        </form>
+        <p class="demo-note"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Version de démonstration : le mot de passe est prérempli.</span></p>
+        <a class="login__back" href="../"><svg aria-hidden="true"><use href="#i-arrow-left"/></svg>Retour au site</a>
+      </div>
+    </div>
   </main>
 
-  <!-- Application -->
+  <!-- ================================================================ Application -->
   <div class="app" id="app" hidden>
-    <header class="topbar">
-      <div class="topbar__brand">
-        <span class="logo-mono topbar__logo" role="img" aria-label="Flamme Up — Poulet & Co"></span>
+    <aside class="side" id="side">
+      <div class="side__brand">
+        <span class="logo-mono side__logo" role="img" aria-label="Flamme Up — Poulet & Co"></span>
       </div>
 
-      <nav class="tabs" role="tablist" aria-label="Sections">
-        <button type="button" role="tab" class="tab" id="tab-orders" aria-selected="true" aria-controls="view-orders">Commandes <span class="tab__badge" id="badge-new" hidden>0</span></button>
-        <button type="button" role="tab" class="tab" id="tab-menu" aria-selected="false" aria-controls="view-menu">Menu</button>
+      <nav class="side__nav" aria-label="Administration">
+        <p class="side__label">Service</p>
+        <a class="side__link" href="#tableau" data-route="tableau"><svg aria-hidden="true"><use href="#i-grid"/></svg>Tableau de bord</a>
+        <a class="side__link" href="#cuisine" data-route="cuisine"><svg aria-hidden="true"><use href="#i-flame"/></svg>Cuisine<span class="side__badge" id="badge-active" hidden>0</span></a>
+        <a class="side__link" href="#commandes" data-route="commandes"><svg aria-hidden="true"><use href="#i-receipt"/></svg>Commandes</a>
+        <p class="side__label">Boutique</p>
+        <a class="side__link" href="#menu" data-route="menu"><svg aria-hidden="true"><use href="#i-book"/></svg>Menu</a>
+        <a class="side__link" href="../" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-external"/></svg>Voir le site</a>
       </nav>
 
-      <div class="topbar__actions">
-        <label class="switch" title="Accepter les commandes en ligne">
-          <input type="checkbox" id="accepting" role="switch">
-          <span class="switch__track"><span class="switch__thumb"></span></span>
-          <span class="switch__label" id="accepting-label">Commandes ouvertes</span>
-        </label>
-        <button type="button" class="icon-btn" id="sound" aria-pressed="true" aria-label="Son des nouvelles commandes"><svg aria-hidden="true"><use href="#i-bell"/></svg></button>
-        <button type="button" class="icon-btn" id="logout" aria-label="Se déconnecter"><svg aria-hidden="true"><use href="#i-logout"/></svg></button>
-      </div>
-    </header>
-
-    <!-- Vue commandes -->
-    <section class="view" id="view-orders" role="tabpanel" aria-labelledby="tab-orders">
-      <div class="kpis" id="kpis"></div>
-      <div class="board" id="board"></div>
-      <p class="sync" id="sync" aria-live="polite"></p>
-    </section>
-
-    <!-- Vue menu -->
-    <section class="view" id="view-menu" role="tabpanel" aria-labelledby="tab-menu" hidden>
-      <div class="menu-admin">
-        <div class="panel">
-          <div class="panel__head">
-            <h2 class="display panel__title">Produits</h2>
-            <p class="panel__sub">Marquez un produit épuisé ou ajustez son prix. Les changements sont visibles sur le site tout de suite.</p>
-          </div>
-          <div class="rows" id="products"></div>
+      <div class="side__foot">
+        <div class="store-card">
+          <label class="switch">
+            <input type="checkbox" id="accepting" role="switch">
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span class="switch__text"><strong id="accepting-label">Commandes en ligne</strong><small id="store-line">—</small></span>
+          </label>
         </div>
-        <div class="panel">
-          <div class="panel__head">
-            <h2 class="display panel__title">Sauces</h2>
-            <p class="panel__sub">Une sauce épuisée ne peut plus être choisie en ligne.</p>
-          </div>
-          <div class="rows" id="sauces"></div>
+        <div class="side__user">
+          <span class="avatar">FU</span>
+          <span><strong>Équipe Flamme Up</strong><small>Service du jour</small></span>
         </div>
+        <button type="button" class="side__link" id="logout"><svg aria-hidden="true"><use href="#i-logout"/></svg>Se déconnecter</button>
       </div>
-    </section>
+    </aside>
+    <div class="side-backdrop" id="side-backdrop"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button type="button" class="icon-btn topbar__burger" id="burger" aria-label="Ouvrir le menu" aria-controls="side" aria-expanded="false"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
+        <div class="topbar__titles">
+          <p class="topbar__crumb" id="crumb">Administration</p>
+          <h1 class="topbar__title" id="page-title">Tableau de bord</h1>
+        </div>
+        <div class="topbar__actions">
+          <span class="live" id="live" title="Actualisation automatique"><span class="live__dot"></span><span id="live-text">En direct</span></span>
+          <button type="button" class="icon-btn" id="sound" aria-pressed="true" aria-label="Son des nouvelles commandes"><svg aria-hidden="true"><use href="#i-bell"/></svg></button>
+          <button type="button" class="btn btn--ghost" id="demo-order"><svg aria-hidden="true"><use href="#i-plus"/></svg><span>Simuler une commande</span></button>
+        </div>
+      </header>
+
+      <div class="demo-bar"><svg aria-hidden="true"><use href="#i-info"/></svg><span><strong>Mode démo.</strong> Les commandes du site arrivent ici en direct ; « Simuler une commande » en crée une fictive pour tester.</span></div>
+
+      <main class="content" id="content">
+        <section class="view" id="view-tableau" data-view="tableau" hidden></section>
+        <section class="view" id="view-cuisine" data-view="cuisine" hidden></section>
+        <section class="view" id="view-commandes" data-view="commandes" hidden></section>
+        <section class="view" id="view-menu" data-view="menu" hidden></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Détail d'une commande -->
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__backdrop" data-close-drawer></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <div class="drawer__inner" id="drawer-inner"></div>
+    </aside>
   </div>
 
   <!-- Confirmation d'annulation -->
   <dialog class="dialog" id="confirm">
     <form method="dialog" class="dialog__body">
-      <h2 class="display dialog__title" id="confirm-title">Annuler la commande ?</h2>
-      <p class="dialog__text" id="confirm-text">Le client ne sera pas prévenu automatiquement. Pensez à l’appeler.</p>
+      <h2 class="dialog__title" id="confirm-title">Annuler la commande ?</h2>
+      <p class="muted" id="confirm-text">Le client ne sera pas prévenu automatiquement. Pensez à l’appeler.</p>
       <div class="dialog__actions">
         <button class="btn btn--ghost" value="no">Garder</button>
-        <button class="btn btn--danger" value="yes">Annuler la commande</button>
+        <button class="btn btn--red" value="yes">Annuler la commande</button>
       </div>
     </form>
   </dialog>
@@ -100,22 +131,36 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <symbol id="i-flame" viewBox="0 0 24 24"><path fill="currentColor" d="M12.6 1.5c.5 3-1 4.7-2.6 6.5C8.3 9.9 6.5 11.9 6.5 15a5.5 5.5 0 0 0 11 0c0-2.2-1-3.9-2-5.2-.3 1.4-1 2.4-2 2.9.4-2.9-.1-6.3-.9-11.2ZM12 21a3 3 0 0 1-3-3c0-1.6 1-2.7 2-3.8.3 1 .9 1.6 1.6 1.9.1-.7.1-1.3.1-1.9A3 3 0 0 1 15 18a3 3 0 0 1-3 3Z"/></symbol>
-      <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
-      <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l18 18"/><path d="M10.6 5.6A9.7 9.7 0 0 1 12 5.5C18 5.5 21.5 12 21.5 12a17 17 0 0 1-3 3.8M6.2 7.3A16.6 16.6 0 0 0 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></g></symbol>
-      <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></g></symbol>
-      <symbol id="i-bell-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 9.5-4.9M18 11v5l1.5 2H8"/><path d="M10 20.5a2 2 0 0 0 4 0"/><path d="M3 3l18 18"/></g></symbol>
-      <symbol id="i-logout" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14"/><path d="M10 12h10M17 8.5l3.5 3.5-3.5 3.5"/></g></symbol>
-      <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M5 4h3.5l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5L16 14l4 1.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.6A1.5 1.5 0 0 1 5 4Z"/></symbol>
-      <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
-      <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 4.5h14v10l-5 5H5z"/><path d="M14 19.5v-5h5"/></g></symbol>
-      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-      <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12.6 2.5c.5 2.8-.9 4.4-2.4 6C8.6 10.3 7 12 7 15a5 5 0 0 0 10 0c0-2-.9-3.5-1.8-4.7-.3 1.3-1 2.2-1.9 2.6.4-2.7 0-5.6-.7-10.4Z"/></symbol>
+      <symbol id="i-flame-solid" viewBox="0 0 24 24"><path fill="currentColor" d="M12.6 1.5c.5 3-1 4.7-2.6 6.5C8.3 9.9 6.5 11.9 6.5 15a5.5 5.5 0 0 0 11 0c0-2.2-1-3.9-2-5.2-.3 1.4-1 2.4-2 2.9.4-2.9-.1-6.3-.9-11.2ZM12 21a3 3 0 0 1-3-3c0-1.6 1-2.7 2-3.8.3 1 .9 1.6 1.6 1.9.1-.7.1-1.3.1-1.9A3 3 0 0 1 15 18a3 3 0 0 1-3 3Z"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></g></symbol>
+      <symbol id="i-receipt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3.5h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3v-17Z"/><path d="M9 8h6M9 11.5h6M9 15h3.5"/></g></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 5.5A2 2 0 0 1 6.5 3.5H19v14H6.5a2 2 0 0 0-2 2v-14Z"/><path d="M4.5 19.5a2 2 0 0 0 2 2H19v-4"/></g></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></g></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14"/><path d="M10 12h10M17 8.5l3.5 3.5-3.5 3.5"/></g></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 3l18 18"/><path d="M10.6 5.6A9.7 9.7 0 0 1 12 5.5C18 5.5 21.5 12 21.5 12a17 17 0 0 1-3 3.8M6.2 7.3A16.6 16.6 0 0 0 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></g></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></g></symbol>
+      <symbol id="i-bell-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 9.5-4.9M18 11v5l1.5 2H8"/><path d="M10 20.5a2 2 0 0 0 4 0"/><path d="M3 3l18 18"/></g></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></g></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M5 4h3.5l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5L16 14l4 1.5V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.6A1.5 1.5 0 0 1 5 4Z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+      <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 4.5h14v10l-5 5H5z"/><path d="M14 19.5v-5h5"/></g></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></g></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5"/><path d="M4.5 19.5h15"/></g></symbol>
+      <symbol id="i-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></g></symbol>
+      <symbol id="i-trend" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5 9.5 11l3.5 3.5L20 7.5"/><path d="M15 7.5h5v5"/></g></symbol>
+      <symbol id="i-cash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></g></symbol>
     </defs>
   </svg>
 
-  <script src="admin.js?v=1"></script>
+  <script src="admin.js?v=6"></script>
 </body>
 </html>

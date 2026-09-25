@@ -66,24 +66,10 @@ foreach ($lines as $line) {
     }
     $lineTotal = (int)$p['price_cents'] * $qty;
     $subtotal += $lineTotal;
-    $items[] = ['name' => $p['name'], 'sauce' => $sauceName, 'qty' => $qty, 'unit_cents' => (int)$p['price_cents'], 'total_cents' => $lineTotal];
+    $items[] = ['id' => $p['id'], 'name' => $p['name'], 'sauce' => $sauceName, 'qty' => $qty, 'unit_cents' => (int)$p['price_cents'], 'total_cents' => $lineTotal];
 }
 
-$tax = (int)round($subtotal * config('tax_rate'));
-$now = date('Y-m-d H:i:s');
 $pickupAt = $asap ? date('Y-m-d H:i:s', time() + config('prep_minutes') * 60) : date('Y-m-d') . ' ' . $pickup . ':00';
+$order = insert_order($name, $phone, $note, $pickupAt, $asap, $items, $subtotal);
 
-// Numéro court du jour : 001, 002…
-$pdo = db();
-$pdo->beginTransaction();
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE created_at >= ?");
-$stmt->execute([date('Y-m-d 00:00:00')]);
-$number = str_pad((string)((int)$stmt->fetchColumn() + 1), 3, '0', STR_PAD_LEFT);
-$token = bin2hex(random_bytes(16));
-
-$pdo->prepare('INSERT INTO orders (number, token, customer_name, phone, note, pickup_at, asap, items_json, subtotal_cents, tax_cents, total_cents, status, ip, created_at, updated_at)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
-    ->execute([$number, $token, $name, $phone, $note, $pickupAt, $asap ? 1 : 0, json_encode($items, JSON_UNESCAPED_UNICODE), $subtotal, $tax, $subtotal + $tax, 'new', client_ip(), $now, $now]);
-$pdo->commit();
-
-json_out(['token' => $token, 'number' => $number, 'pickup_at' => $pickupAt, 'asap' => $asap, 'total_cents' => $subtotal + $tax], 201);
+json_out(['token' => $order['token'], 'number' => $order['number'], 'pickup_at' => $pickupAt, 'asap' => $asap, 'total_cents' => $order['total_cents']], 201);
