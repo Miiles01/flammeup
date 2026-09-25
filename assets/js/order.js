@@ -21,9 +21,11 @@
     if (src.startsWith('unsplash:')) return `https://images.unsplash.com/${src.slice(9)}?auto=format&fit=crop&w=${w}&q=70`;
     return src;
   };
-  const imgTag = (src, w, alt, cls = '') => src
-    ? `<img class="${cls}" src="${photo(src, w)}" srcset="${photo(src, w)} 1x, ${photo(src, w * 2)} 2x" alt="${esc(alt)}" loading="lazy" decoding="async">`
-    : '';
+  const imgTag = (src, w, alt, cls = '') => {
+    if (!src) return '';
+    const srcset = src.startsWith('unsplash:') ? ` srcset="${photo(src, w)} 1x, ${photo(src, w * 2)} 2x"` : '';
+    return `<img class="${cls}" src="${photo(src, w)}"${srcset} alt="${esc(alt)}" loading="lazy" decoding="async">`;
+  };
   const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   const STATUS_STEPS = [
     ['new', 'Reçue'],

@@ -60,6 +60,9 @@ function upgrade(PDO $pdo): void
     $cols = array_column($pdo->query('PRAGMA table_info(products)')->fetchAll(), 'name');
     if (!in_array('image', $cols, true)) $pdo->exec("ALTER TABLE products ADD COLUMN image TEXT NOT NULL DEFAULT ''");
 
+    // Photos passées du CDN Unsplash aux fichiers locaux (garde prix et disponibilités).
+    $pdo->exec("UPDATE products SET image = 'assets/img/menu/' || id || '.jpg' WHERE image LIKE 'unsplash:%'");
+
     $stmt = $pdo->prepare('SELECT value FROM settings WHERE key = ?');
     $stmt->execute(['menu_version']);
     if ($stmt->fetchColumn() !== MENU_VERSION) {
@@ -72,9 +75,14 @@ function upgrade(PDO $pdo): void
     }
 }
 
+function local_photo(string $productId): string
+{
+    return 'assets/img/menu/' . $productId . '.jpg';
+}
+
 /**
  * Menu de départ (à ajuster avec le client depuis le panneau).
- * Photos : Unsplash (licence libre, usage commercial permis), servies par leur CDN.
+ * Photos : Unsplash (licence libre, usage commercial permis), téléchargées dans assets/img/menu/<id>.jpg.
  */
 function seed_menu(PDO $pdo): void
 {
@@ -99,7 +107,10 @@ function seed_menu(PDO $pdo): void
         ['boisson', 'boissons', 'Boisson gazeuse', 'Canette 355 ml, bien froide.', 249, 0, 0, $u('photo-1629654613528-5d0a2e4166de')],
     ];
     $stmt = $pdo->prepare('INSERT INTO products (id, category, name, description, price_cents, has_sauce, featured, image, sort) VALUES (?,?,?,?,?,?,?,?,?)');
-    foreach ($products as $i => $p) $stmt->execute([...$p, $i]);
+    foreach ($products as $i => $p) {
+        $p[7] = local_photo($p[0]); // l'id Unsplash reste en source ; la photo est servie depuis assets/
+        $stmt->execute([...$p, $i]);
+    }
 }
 
 function migrate(PDO $pdo): void
