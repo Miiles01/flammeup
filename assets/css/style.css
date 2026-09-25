@@ -335,6 +335,13 @@ hr { border: 0; border-top: 1px solid var(--border-subtle); margin: 0; }
 
 @media (min-width: 768px) { .hero__title { font-size: 4.5rem; } }
 
+/* Mobile : seulement le texte et les deux boutons (pas de flamme, ni ligne, ni chips). */
+@media (max-width: 767px) {
+  .hero { justify-content: center; gap: 2.5rem; padding-bottom: 4rem; }
+  .hero__scene, .hero__rule, .hero__trust, .hero__chips { display: none; }
+  .hero__actions .btn { flex: 1 1 100%; }
+}
+
 /* Composition desktop : blocs placés aux coordonnées de l'artboard 1440×800. */
 @media (min-width: 1024px) {
   .hero { display: block; height: 100lvh; min-height: 0; padding: 0; }

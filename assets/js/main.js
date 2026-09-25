@@ -276,6 +276,8 @@
   const flameReady = new Promise((r) => { firstFrame = r; });
   $$('canvas[data-flame]').forEach((c) => {
     const isHero = c.dataset.flame === 'hero';
+    // Canvas masqué (mobile) : pas de contexte WebGL, rien à rendre.
+    if (!c.offsetParent) { if (isHero) firstFrame(); return; }
     const scene = window.FlameScene && window.FlameScene.createFlame(c, {
       scale: isHero ? 0.82 : 0.75,
       onFirstFrame: isHero ? firstFrame : null,
